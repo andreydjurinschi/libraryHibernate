@@ -3,6 +3,7 @@ package lab02.libraryhibernate.controllers;
 import lab02.libraryhibernate.dtos.BookDto;
 import lab02.libraryhibernate.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,8 +12,11 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @GetMapping
     public List<BookDto> getAllBooks() {
@@ -24,4 +28,12 @@ public class BookController {
         bookService.addBook(bookDto);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBookById(@PathVariable Long id) {
+        BookDto bookDto = bookService.getBookById(id);
+        if(bookDto == null){
+            return ResponseEntity.status(404).body("Book not found");
+        }
+        return ResponseEntity.ok(bookDto);
+    }
 }

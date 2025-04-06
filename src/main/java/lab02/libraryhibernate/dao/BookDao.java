@@ -1,8 +1,8 @@
 package lab02.libraryhibernate.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import lab02.libraryhibernate.entities.Book;
 import java.util.List;
@@ -10,17 +10,27 @@ import java.util.List;
 @Repository
 public class BookDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+
+    private final SessionFactory sessionFactory;
+
+    public BookDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     public List<Book> getAllBooks() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("from Book", Book.class).list();
+        try(Session session = sessionFactory.openSession()) {
+            String hql = "select b from Book b left join fetch b.categories";
+            List<Book> books = session.createQuery(hql, Book.class).getResultList();
+            return books;
+        }
     }
 
     public Book getBookById(Long id){
-        Session session = sessionFactory.openSession();
-        return session.createQuery("from Book where id = :id", Book.class).setParameter("id", id).getSingleResultOrNull();
+        try(Session session = sessionFactory.openSession()) {
+            String hql = "select b from Book b left join fetch b.categories where b.id = :id";
+            return session.createQuery(hql, Book.class).setParameter("id", id).getSingleResultOrNull();
+        }
+
     }
 
     public void createBook(Book book){

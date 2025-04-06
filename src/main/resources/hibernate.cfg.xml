@@ -17,5 +17,9 @@
 
         <mapping class="lab02.libraryhibernate.entities.Author"/>
         <mapping class="lab02.libraryhibernate.entities.Book"/>
+        <mapping class="lab02.libraryhibernate.entities.Publisher"/>
+        <mapping class="lab02.libraryhibernate.entities.Category"/>
+
+
     </session-factory>
 </hibernate-configuration>

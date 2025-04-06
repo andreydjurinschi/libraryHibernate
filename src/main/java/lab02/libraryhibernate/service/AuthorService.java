@@ -38,4 +38,22 @@ public class AuthorService {
             Author author = authorDao.getAuthor(id);
             return authorMapper.mapToDto(author);
     }
+
+    public void deleteAuthorById(Long id){
+        authorDao.deleteAuthorById(id);
+    }
+
+    public AuthorDto updateAuthor(AuthorDto authorDto){
+        Author authorToUpdate = authorDao.getAuthor(authorDto.getId());
+        if(authorToUpdate != null){
+            authorToUpdate.setName(authorDto.getName());
+            if(authorDto.getBooksIds() != null){
+                authorToUpdate.setBooks(authorMapper.mapToEntity(authorDto).getBooks());
+            }else{
+                authorToUpdate.setBooks(null);
+            }
+            return authorMapper.mapToDto(authorDao.updateAuthor(authorToUpdate));
+        }
+        return null;
+    }
 }

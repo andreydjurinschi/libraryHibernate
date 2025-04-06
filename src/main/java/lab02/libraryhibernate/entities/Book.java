@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,8 +24,22 @@ public class Book {
     @JoinColumn(nullable = false)
     private Author author;
 
-    public Book(String title, Author author) {
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Publisher publisher;
+
+    @ManyToMany
+    @JoinTable(
+            name="book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "cat_id")
+    )
+    private List<Category> categories = new ArrayList<>();
+
+    public Book(String title, Author author, Publisher publisher, List<Category> categories) {
         this.title = title;
         this.author = author;
+        this.publisher = publisher;
+        this.categories = categories;
     }
 }

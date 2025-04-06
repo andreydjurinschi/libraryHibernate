@@ -36,4 +36,24 @@ public class AuthorDao {
         session.getTransaction().commit();
         session.close();
     }
+
+    public Author updateAuthor(Author author){
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.update(author);
+        session.getTransaction().commit();
+        return author;
+    }
+
+    public void deleteAuthorById(Long id){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Author author = session.get(Author.class, id);
+        if (author != null) {
+            session.delete(author);
+        }
+        session.getTransaction().commit();
+        session.close();
+    }
 }

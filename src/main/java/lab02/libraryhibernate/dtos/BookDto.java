@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,5 +19,7 @@ public class BookDto {
     private Long id;
     private String title;
     private Long authorId;
+    private Long publisherId;
+    private List<Long> categoryIds = new ArrayList<>();
 
 }

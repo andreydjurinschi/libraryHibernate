@@ -27,14 +27,14 @@ public class AuthorController {
         return authorService.getAuthorById(id);
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateAuthor(@RequestBody AuthorDto authorDto){
-        AuthorDto updatedAuthorDto = authorService.updateAuthor(authorDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateAuthor(@PathVariable Long id, @RequestBody AuthorDto authorDto){
+        AuthorDto updatedAuthorDto = authorService.getAuthorById(id);
         if(updatedAuthorDto == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
         }
-        authorService.updateAuthor(authorDto);
-        return ResponseEntity.ok(updatedAuthorDto);
+        authorService.updateAuthor(id, authorDto);
+        return ResponseEntity.ok().body("Author updated");
     }
 
     @DeleteMapping("/{id}")

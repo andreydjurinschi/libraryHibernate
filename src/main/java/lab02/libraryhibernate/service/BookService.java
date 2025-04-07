@@ -29,10 +29,7 @@ public class BookService {
         return bookDtos;
     }
 
-    public void addBook(BookDto bookDto){
-        Book book = bookMapper.mapToEntity(bookDto);
-        bookDao.createBook(book);
-    }
+    
 
     public BookDto getBookById(Long id){
         Book book = bookDao.getBookById(id);

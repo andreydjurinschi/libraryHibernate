@@ -12,48 +12,51 @@ import java.util.List;
 public class AuthorDao {
 
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
+
+    public AuthorDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     public List<Author> getAuthors() {
         try(Session session = sessionFactory.openSession()){
-            String hql = "select a from Author a join fetch a.books";
-            return session.createQuery(hql, Author.class).list();
+            String query = "select a from Author a join fetch a.books";
+            return session.createQuery(query, Author.class).list();
         }
     }
 
     public Author getAuthor(Long id) {
-        Session session = sessionFactory.openSession();
-            return session.createQuery("from Author where id = :id", Author.class)
-                    .setParameter("id", id)
-                    .getSingleResultOrNull();
+        try(Session session = sessionFactory.openSession()){
+            String query = "select a from Author a join fetch a.books where a.id = :id";
+            return session.createQuery(query, Author.class).setParameter("id", id).uniqueResult();
+        }
     }
 
     public void createAuthor(Author author)
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.save(author);
-        session.getTransaction().commit();
-        session.close();
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            session.persist(author);
+            session.getTransaction().commit();
+        }
     }
 
     public Author updateAuthor(Author author){
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.update(author);
-        session.getTransaction().commit();
-        return author;
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.update(author);
+            session.getTransaction().commit();
+            return author;
+        }
     }
 
     public void deleteAuthorById(Long id){
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        Author author = session.get(Author.class, id);
-        if (author != null) {
-            session.delete(author);
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Author author = session.get(Author.class, id);
+            session.remove(author);
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
-        session.close();
     }
 }

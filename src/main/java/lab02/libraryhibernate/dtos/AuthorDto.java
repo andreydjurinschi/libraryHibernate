@@ -23,5 +23,12 @@ public class AuthorDto {
 
     private Set<Long> booksIds = new HashSet<>();
 
-
+    @Override
+    public String toString() {
+        return "AuthorDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", booksIds=" + booksIds +
+                '}';
+    }
 }

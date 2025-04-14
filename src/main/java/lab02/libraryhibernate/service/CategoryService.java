@@ -42,4 +42,22 @@ public class CategoryService {
         Category category = categoryMapper.mapToEntity(categoryDto);
         categoryDao.createCategory(category);
     }
+
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Category category = categoryDao.getCategory(id);
+        if(category != null){
+            category.setName(categoryDto.getName());
+            if(categoryDto.getBooksIds() != null){
+                category.setBooks(categoryMapper.mapToEntity(categoryDto).getBooks());
+            }
+            Category updated = categoryDao.updateCategory(category);
+            return categoryMapper.mapToDto(updated);
+        }
+        return null;
+    }
+
+    public void deleteCategory(Long id) {
+        Category category = categoryDao.getCategory(id);
+        categoryDao.deleteCategory(category);
+    }
 }

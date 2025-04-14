@@ -14,9 +14,11 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
+    @Autowired
     private final BookService bookService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService)
+    {
         this.bookService = bookService;
     }
 
@@ -25,20 +27,11 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
-    /*@PostMapping
-    public void createBook(@RequestBody BookDto bookDto) {
-        bookService.addBook(bookDto);
-    }*/
-    /*@PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        BookDto dto = bookService.getBookById(id);
-        if(bookDto == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
-        }
-        bookService.updateBook(id, bookDto);
-        return ResponseEntity.ok().body(dto);
-
-    }*/
+    @PostMapping
+    public ResponseEntity<String> createBook(@RequestBody BookDto bookDto) {
+        String message = bookService.createBook(bookDto);
+        return ResponseEntity.ok().body(message);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getBookById(@PathVariable Long id) {
@@ -47,5 +40,17 @@ public class BookController {
             return ResponseEntity.status(404).body("Book not found");
         }
         return ResponseEntity.ok(bookDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return ResponseEntity.ok().body("Book deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        String message = bookService.updateBook(id, bookDto);
+        return ResponseEntity.ok().body(message);
     }
 }

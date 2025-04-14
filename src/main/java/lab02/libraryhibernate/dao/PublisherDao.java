@@ -1,6 +1,5 @@
 package lab02.libraryhibernate.dao;
 
-import lab02.libraryhibernate.entities.Author;
 import lab02.libraryhibernate.entities.Publisher;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,34 +14,43 @@ public class PublisherDao {
     private SessionFactory sessionFactory;
 
     public List<Publisher> getAllPublishers(){
-        Session session = sessionFactory.openSession();
-        return session.createQuery("from Publisher", Publisher.class).list();
+        try(Session session = sessionFactory.openSession()) {
+            String query = "select p from Publisher p left join fetch p.books";
+            return session.createQuery(query, Publisher.class).list();
+        }
     }
 
     public Publisher getPublisher(Long id){
-        Session session = sessionFactory.openSession();
-        Publisher publisher = session.createQuery("from Publisher where id = :id", Publisher.class).setParameter("id", id).getSingleResultOrNull();
-        return publisher;
+        try(Session session = sessionFactory.openSession()) {
+            String query = "select p from Publisher p left join fetch p.books where p.id = :id";
+            return session.createQuery(query, Publisher.class).setParameter("id", id).uniqueResult();
+        }
     }
 
     public void createPublisher(Publisher publisher){
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.save(publisher);
-        session.getTransaction().commit();
-        session.close();
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.save(publisher);
+            session.getTransaction().commit();
+        }
     }
 
     public Publisher updatePublisher(Publisher publisher){
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
+        try(Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.update(publisher);
             session.getTransaction().commit();
             return publisher;
-        }finally {
-            session.close();
+        }
+    }
+
+    public void deletePublisher(Long id){
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Publisher publisher = session.get(Publisher.class, id);
+            session.delete(publisher);
+            session.getTransaction().commit();
         }
     }
 }
+

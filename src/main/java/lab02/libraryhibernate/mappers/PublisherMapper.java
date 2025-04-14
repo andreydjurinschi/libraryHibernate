@@ -14,7 +14,7 @@ import java.util.Set;
 public class PublisherMapper {
 
     public PublisherDto mapToDto(Publisher publisher) {
-        return new PublisherDto(publisher.getId(), publisher.getName(), getBooksIds(publisher));
+        return new PublisherDto(/*publisher.getId(), */publisher.getName(), getBooksIds(publisher));
     }
 
     public Publisher mapToEntity(PublisherDto publisherDto) {

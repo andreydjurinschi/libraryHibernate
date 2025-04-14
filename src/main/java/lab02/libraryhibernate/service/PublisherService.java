@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PublisherService {
@@ -42,17 +43,18 @@ public class PublisherService {
         publisherDao.createPublisher(publisher);
     }
 
-    public PublisherDto updatePublisher(PublisherDto publisherDto){
-        Publisher publisherToUpdate = publisherDao.getPublisher(publisherDto.getId());
+    public void updatePublisher(Long id, PublisherDto publisherDto){
+        Publisher publisherToUpdate = publisherDao.getPublisher(id);
         if(publisherToUpdate != null){
-            publisherToUpdate.setName(publisherToUpdate.getName());
+            publisherToUpdate.setName(publisherDto.getName());
             if(publisherDto.getBooks() != null){
                 publisherToUpdate.setBooks(publisherMapper.mapToEntity(publisherDto).getBooks());
-            }else{
-                publisherDto.setBooks(null);
             }
-            return publisherMapper.mapToDto(publisherDao.updatePublisher(publisherToUpdate));
+            publisherMapper.mapToDto(publisherDao.updatePublisher(publisherToUpdate));
         }
-        return null;
+    }
+
+    public void deletePublisher(Long id){
+        publisherDao.deletePublisher(id);
     }
 }

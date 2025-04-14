@@ -20,8 +20,7 @@ public class BookDao {
     public List<Book> getAllBooks() {
         try(Session session = sessionFactory.openSession()) {
             String query = "select b from Book b left join fetch b.categories";
-            List<Book> books = session.createQuery(query, Book.class).getResultList();
-            return books;
+            return session.createQuery(query, Book.class).getResultList();
         }
     }
 
@@ -32,23 +31,27 @@ public class BookDao {
         }
     }
 
-    public Book save(Book book) {
+    public void createBook(Book book) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.saveOrUpdate(book);
+            session.save(book);
+            session.getTransaction().commit();
+        }
+    }
+
+    public Book updateBook(Book book) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.update(book);
             session.getTransaction().commit();
             return book;
         }
     }
-
-    private boolean existsBookById(Long id){
-        try(Session session = sessionFactory.getCurrentSession()) {
-            String query = "select b from Book b where b.id = :id";
-            Book book = session.createQuery(query, Book.class).setParameter("id", id).getSingleResult();
-            if(book != null){
-                return true;
-            }
-            return false;
+    public void deleteBook(Book book) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.delete(book);
+            session.getTransaction().commit();
         }
     }
 

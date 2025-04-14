@@ -38,13 +38,23 @@ public class PublisherController {
         publisherService.createPublisher(publisherDto);
     }
 
-    @PutMapping
-    public ResponseEntity<?> updatePublisher(@RequestBody PublisherDto publisherDto){
-        PublisherDto updatedPublisher = publisherService.updatePublisher(publisherDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePublisher(@PathVariable Long id, @RequestBody PublisherDto publisherDto){
+        PublisherDto updatedPublisher = publisherService.getPublisherById(id);
         if(updatedPublisher == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publisher not found");
         }
-        publisherService.updatePublisher(publisherDto);
-        return ResponseEntity.ok(publisherDto);
+        publisherService.updatePublisher(id, publisherDto);
+        return ResponseEntity.ok().body("Publisher updated");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePublisher(@PathVariable Long id){
+        PublisherDto publisherDto = publisherService.getPublisherById(id);
+        if(publisherDto == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publisher not found");
+        }
+        publisherService.deletePublisher(id);
+        return ResponseEntity.ok().body("Publisher deleted");
     }
 }

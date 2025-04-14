@@ -35,4 +35,24 @@ public class CategoryController {
     public void addCategory(@RequestBody CategoryDto categoryDto) {
         categoryService.createCategory(categoryDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
+        CategoryDto category = categoryService.getCategoryDto(id);
+        if (category == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
+        }
+        categoryService.updateCategory(id, categoryDto);
+        return ResponseEntity.ok("Category updated" + categoryDto.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        CategoryDto categoryDto = categoryService.getCategoryDto(id);
+        if (categoryDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
+        }
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok().body("Category " +categoryDto.getName() + " deleted successfully");
+    }
 }

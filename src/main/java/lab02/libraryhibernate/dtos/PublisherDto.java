@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class PublisherDto {
 
-    private Long Id;
+    /*private Long Id;*/
 
     private String name;
 

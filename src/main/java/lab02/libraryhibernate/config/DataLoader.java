@@ -32,8 +32,8 @@ public class DataLoader implements CommandLineRunner {
             session.beginTransaction();
             Author author = new Author("Sergei Bobbin");
             Author author1 = new Author("Ilia Golovkin");
-            session.save(author);
             session.save(author1);
+            session.save(author);
             Category category = new Category("Science");
             Category category1 = new Category("History");
             session.save(category);

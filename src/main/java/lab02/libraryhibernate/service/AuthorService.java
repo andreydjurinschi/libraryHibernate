@@ -21,7 +21,8 @@ public class AuthorService {
     public List<AuthorDto> getAuthors()
     {
         List<AuthorDto> authorDtos = new ArrayList<>();
-        for(Author author : authorDao.getAuthors()){
+        List<Author> authors = authorDao.getAuthors();
+        for(Author author : authors){
             authorDtos.add(authorMapper.mapToDto(author));
         }
         return authorDtos;
@@ -44,14 +45,16 @@ public class AuthorService {
         authorDao.deleteAuthorById(id);
     }
 
-    public void updateAuthor(Long id, AuthorDto authorDto){
+    public AuthorDto updateAuthor(Long id, AuthorDto authorDto){
         Author authorToUpdate = authorDao.getAuthor(id);
         if(authorToUpdate != null){
             authorToUpdate.setName(authorDto.getName());
             if(authorDto.getBooksIds() != null){
                 authorToUpdate.setBooks(authorMapper.mapToEntity(authorDto).getBooks());
             }
-            authorMapper.mapToDto(authorDao.updateAuthor(authorToUpdate));
+            Author updated = authorDao.updateAuthor(authorToUpdate);
+            return authorMapper.mapToDto(updated);
         }
+        return null;
     }
 }

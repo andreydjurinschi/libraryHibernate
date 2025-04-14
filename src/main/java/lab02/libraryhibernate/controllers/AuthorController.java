@@ -29,18 +29,21 @@ public class AuthorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateAuthor(@PathVariable Long id, @RequestBody AuthorDto authorDto){
-        AuthorDto updatedAuthorDto = authorService.getAuthorById(id);
+        AuthorDto updatedAuthorDto = authorService.updateAuthor(id, authorDto);
         if(updatedAuthorDto == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author with " + id + " not found");
         }
-        authorService.updateAuthor(id, authorDto);
-        return ResponseEntity.ok().body("Author updated");
+        return ResponseEntity.ok().body("Author updated, input data was:\n" + updatedAuthorDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAuthorById(@PathVariable Long id){
+        AuthorDto authorDto = authorService.getAuthorById(id);
+        if(authorService.getAuthorById(id) == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
+        }
         authorService.deleteAuthorById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Author deleted successfully");
+        return ResponseEntity.status(200).body("Author " +authorDto.getName() + " deleted successfully");
     }
 
     @PostMapping

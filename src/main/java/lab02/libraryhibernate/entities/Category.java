@@ -25,6 +25,7 @@ public class Category {
 
     public Category(String name) {
         this.name = name;
+        this.books = new ArrayList<>();
     }
 
 
